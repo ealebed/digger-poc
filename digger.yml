@@ -1,0 +1,36 @@
+projects:
+  - name: test
+    dir: ./test
+    # include_patterns: ["../modules/**"]  # Resolved from ./test/
+    # exclude_patterns: ["../modules/deprecated_module/**"]
+    opentofu: false
+    terraform: true
+    # workflow: with-checkov
+    workflow: with-infracost
+
+workflows:
+  with-checkov:
+    plan:
+      steps:
+        - init:
+        - plan:
+        - run: checkov -d . --framework terraform
+  with-infracost:
+    workflow_configuration:
+      on_pull_request_pushed: ["digger plan"]
+      on_pull_request_closed: ["digger unlock"]
+      on_commit_to_default: ["digger unlock"]
+    plan:
+      # For infracost diff we’d need to run Infracost twice: first to generate the breakdown on the main branch, then to generate diff on the PR branch
+      steps:
+        - init:
+          extra_args: ["-backend-config=test.tfbackend" ]
+        - plan:
+        - run: infracost breakdown --path=. | tee -a $DIGGER_OUT
+        - run: git checkout $DEFAULT_BRANCH && infracost breakdown --path . --format=json --out-file=$RUNNER_TEMP/infracost-base-${PROJECT_NAME}.json && git fetch origin $PR_BRANCH && git checkout $PR_BRANCH
+        - run: infracost diff --path=. --compare-to=$RUNNER_TEMP/infracost-base-${PROJECT_NAME}.json | tee -a $DIGGER_OUT
+    apply:
+      steps:
+        - init:
+          extra_args: ["-backend-config=test.tfbackend" ]
+        - apply:

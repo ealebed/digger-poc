@@ -1,0 +1,32 @@
+name: Destroy resources in Digger project
+
+on:
+  workflow_dispatch:
+    inputs:
+      project:
+        description: 'Digger project to perform destroy on'
+        required: true
+
+run-name: '${{inputs.run_name}}'
+
+jobs:
+  destroy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Digger destroy
+        uses: diggerhq/digger@vLatest
+        with:
+          mode: manual
+          digger-spec: ${{ inputs.spec }}
+          command: "digger destroy"
+          project: "${{ inputs.project }}"
+          setup-aws: true
+          aws-role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

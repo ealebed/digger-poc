@@ -25,6 +25,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
+      - name: Setup Infracost
+        uses: infracost/actions/setup@v2
+        # See https://github.com/infracost/actions/tree/master/setup for other inputs
+        # If you can't use this action, see Docker images in https://infracost.io/cicd
+        with:
+          api-key: ${{ secrets.INFRACOST_API_KEY }}
+
       - name: Generate GitHub App token
         env:
           APP_ID: ${{ secrets.TF_MODULES_APP_ID }}
@@ -52,6 +59,9 @@ jobs:
         uses: diggerhq/digger@vLatest
         with:
           digger-spec: ${{ inputs.spec }}
+          # digger-private-key: ${{ secrets.DIGGER_PRIVATE_KEY }}
+          # terraform-tfe-token: ${{ secrets.DIGGER_TOKEN }}
+          # terraform-tfe-hostname: otaco.app
           setup-terraform: true
           terraform-version: 1.14.2
           setup-aws: true
