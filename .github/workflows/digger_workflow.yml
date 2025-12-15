@@ -1,4 +1,5 @@
 name: Digger Workflow
+
 on:
   workflow_dispatch:
     inputs:
@@ -8,6 +9,9 @@ on:
       run_name:
         description: 'Optional run name for the workflow'
         required: false
+
+run-name: '${{inputs.run_name}}'
+
 jobs:
   digger-job:
     runs-on: ubuntu-latest
@@ -50,7 +54,7 @@ jobs:
       #     echo ${{ steps.generate_token.outputs.token }} | gh auth login --with-token
       #     gh auth setup-git
 
-      - name: Display job info
+      - name: ${{ fromJSON(github.event.inputs.spec).job_id }}
         run: echo "job id ${{ fromJSON(github.event.inputs.spec).job_id }}"
         if: github.event.inputs.spec != ''
 
@@ -73,6 +77,6 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Optional if you're using remote modules from your own private repo
-          # GIT_CONFIG_COUNT: "1"
-          # GIT_CONFIG_KEY_0: "url.https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/.insteadOf"
-          # GIT_CONFIG_VALUE_0: "ssh://git@github.com/"
+          GIT_CONFIG_COUNT: "1"
+          GIT_CONFIG_KEY_0: "url.https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/.insteadOf"
+          GIT_CONFIG_VALUE_0: "ssh://git@github.com/"
