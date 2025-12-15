@@ -1,55 +1,80 @@
-projects:
-  - name: test
-    dir: ./test
-    # include_patterns: ["../modules/**"]  # Resolved from ./test/
-    # exclude_patterns: ["../modules/deprecated_module/**"]
-    # opentofu: false
-    terraform: true
-    # workflow: with-checkov
-    # workflow: with-infracost
-    workflow: default
+auto_merge: false
+pr_locks: true
+generate_projects:
+  blocks:
+    # teams/{team}/aws/test/{region}/{project}
+    - include: "teams/*/*/test/*/*"
+      exclude: "**/.terraform/**"
+      terraform: true
+      workflow: "default"
+    # teams/{team}/aws/prod/{region}/{project}
+    - include: "teams/*/*/prod/*/*"
+      exclude: "**/.terraform/**"
+      terraform: true
+      workflow: "prod"
 
 workflows:
   default:
+    plan:
+      steps:
+        - run: echo "TEST - starting plan step"
+        - init
+        - plan
+    apply:
+      steps:
+        - run: echo "TEST - starting apply step"
+        - init
+        - apply
     workflow_configuration:
       on_pull_request_pushed: ["digger plan"]
       on_pull_request_closed: ["digger unlock"]
       on_commit_to_default: ["digger unlock"]
+      skip_merge_check: true  # Let Dev Apply before the branch is mergable
+
+  prod:
     plan:
       steps:
-      - init:
-        extra_args: ["-backend-config=test.tfbackend" ]
-      - plan:
+        - run: echo "PROD - starting plan step"
+        - init
+        - plan
     apply:
       steps:
-      - init:
-        extra_args: ["-backend-config=test.tfbackend" ]
-      - apply:
+        - run: echo "PROD - starting apply step"
+        - init
+        - apply
+    workflow_configuration:
+      on_pull_request_pushed: ["digger plan"]
+      on_pull_request_closed: ["digger unlock"]
+      on_commit_to_default: ["digger unlock"]
 
   with-checkov:
     plan:
       steps:
-        - init:
-        - plan:
+        - init
+        - plan
         - run: checkov -d . --framework terraform
-
-  with-infracost:
+    apply:
+      steps:
+        - init
+        - apply
     workflow_configuration:
       on_pull_request_pushed: ["digger plan"]
       on_pull_request_closed: ["digger unlock"]
       on_commit_to_default: ["digger unlock"]
+
+  with-infracost:
     plan:
       steps:
-        - init:
-          extra_args: ["-backend-config=test.tfbackend" ]
-        - plan:
-        # For infracost diff we’d need to run Infracost twice: first to generate the breakdown on the main branch, 
-        # then to generate diff on the PR branch
+        - init
+        - plan
         - run: infracost breakdown --path=. | tee -a $DIGGER_OUT
         - run: git checkout $DEFAULT_BRANCH && infracost breakdown --path . --format=json --out-file=$RUNNER_TEMP/infracost-base-${PROJECT_NAME}.json && git fetch origin $PR_BRANCH && git checkout $PR_BRANCH
         - run: infracost diff --path=. --compare-to=$RUNNER_TEMP/infracost-base-${PROJECT_NAME}.json | tee -a $DIGGER_OUT
     apply:
       steps:
-        - init:
-          extra_args: ["-backend-config=test.tfbackend" ]
-        - apply:
+        - init
+        - apply
+    workflow_configuration:
+      on_pull_request_pushed: ["digger plan"]
+      on_pull_request_closed: ["digger unlock"]
+      on_commit_to_default: ["digger unlock"]
