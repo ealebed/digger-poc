@@ -6,7 +6,8 @@ generate_projects:
     - include: "teams/*/*/test/*/*"
       exclude: "**/.terraform/**"
       terraform: true
-      workflow: "default"
+      # workflow: "default"
+      workflow: "with-checkov"
     # teams/{team}/aws/prod/{region}/{project}
     - include: "teams/*/*/prod/*/*"
       exclude: "**/.terraform/**"
