@@ -25,7 +25,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v5 # Don't upgrade to v6 until this issue is resolved: https://github.com/diggerhq/digger/issues/2468
 
       # - name: Setup Infracost
       #   uses: infracost/actions/setup@v2
@@ -65,8 +65,8 @@ jobs:
           setup-terraform: true
           terraform-version: 1.14.2
           setup-aws: true
-          # setup-checkov: true
-          # checkov-version: '3.2.22'
+          setup-checkov: true
+          checkov-version: '3.2.22'
           aws-role-to-assume: ${{ vars.AWS_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
           # upload-plan-destination: 'aws'   # Since the plans bucket is S3
