@@ -10,5 +10,5 @@ provider "aws" {
 # }
 
 resource "aws_s3_bucket" "demo" {
-  bucket = "storage-${var.environment}-531438381462-digger"
+  bucket = "s3-storage-${var.environment}-531438381462-digger"
 }
