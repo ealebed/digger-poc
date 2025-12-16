@@ -57,8 +57,6 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Optional if you're using remote modules from your own private repo
-          GIT_CONFIG_COUNT: "1"
-          GIT_CONFIG_KEY_0: "url.https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/.insteadOf"
-          GIT_CONFIG_VALUE_0: "ssh://git@github.com/"
-          # Optional if you're using Infracost integration
-          # INFRACOST_API_KEY: ${{ secrets.INFRACOST_API_KEY }}
+          # GIT_CONFIG_COUNT: "1"
+          # GIT_CONFIG_KEY_0: "url.https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/.insteadOf"
+          # GIT_CONFIG_VALUE_0: "ssh://git@github.com/"
