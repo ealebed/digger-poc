@@ -49,8 +49,9 @@ jobs:
           setup-aws: true
           aws-role-to-assume: ${{ vars.AWS_ROLE_ARN }} # TODO: Change to secrets.AWS_ROLE_ARN
           aws-region: ${{ vars.AWS_REGION }}
-          # upload-plan-destination: 'aws'   # Since the plans bucket is S3
-          # upload-plan-destination-s3-bucket: '{NAME_OF_YOUR_PLAN_BUCKET}'
+          # Digger can be used to store plan artefacts during the plan phase and make them available for use during the apply phase
+          upload-plan-destination: 'aws'
+          upload-plan-destination-s3-bucket: ${{ vars.TF_PLAN_OUTPUTS_BUCKET }}
           reporting-strategy: multiple_comments
 
         env:
