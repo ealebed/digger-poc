@@ -66,7 +66,7 @@ jobs:
           terraform-version: 1.14.2
           setup-aws: true
           setup-checkov: true
-          checkov-version: '3.2.22'
+          checkov-version: '3.2.495'
           aws-role-to-assume: ${{ vars.AWS_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
           # upload-plan-destination: 'aws'   # Since the plans bucket is S3

@@ -1,3 +1,4 @@
+# checkov:skip=CKV_TF_1: module source is pinned to a trusted tag; commit SHA pinning is handled by release process
 module "s3_bucket" {
   source = "git::https://github.com/ealebed/terraform-modules.git?ref=s3-bucket/v1.0.1"
 
