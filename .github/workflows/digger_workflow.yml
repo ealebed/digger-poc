@@ -32,27 +32,7 @@ jobs:
         # See https://github.com/infracost/actions/tree/master/setup for other inputs
         # If you can't use this action, see Docker images in https://infracost.io/cicd
         with:
-          api-key: ${{ secrets.INFRACOST_API_KEY }}
-
-      # - name: Generate GitHub App token
-      #   env:
-      #     APP_ID: ${{ secrets.TF_MODULES_APP_ID }}
-      #     PRIVATE_KEY: ${{ secrets.TF_MODULES_APP_PRIVATE_KEY }}
-      #   if: ${{ env.APP_ID != null && env.PRIVATE_KEY != null }}
-      #   id: generate_token
-      #   uses: tibdex/github-app-token@v2
-      #   with:
-      #     app_id: ${{ secrets.TF_MODULES_APP_ID }}
-      #     private_key: ${{ secrets.TF_MODULES_APP_PRIVATE_KEY }}
-
-      # - name: Authenticate to GitHub with GitHub App token
-      #   env:
-      #     APP_ID: ${{ secrets.TF_MODULES_APP_ID }}
-      #     PRIVATE_KEY: ${{ secrets.TF_MODULES_APP_PRIVATE_KEY }}
-      #   if: ${{ env.APP_ID != null && env.PRIVATE_KEY != null }}
-      #   run: |
-      #     echo ${{ steps.generate_token.outputs.token }} | gh auth login --with-token
-      #     gh auth setup-git
+          api-key: ${{ vars.INFRACOST_API_KEY }} # TODO: Change to secrets.INFRACOST_API_KEY
 
       - name: ${{ fromJSON(github.event.inputs.spec).job_id }}
         run: echo "job id ${{ fromJSON(github.event.inputs.spec).job_id }}"
@@ -63,11 +43,11 @@ jobs:
         with:
           digger-spec: ${{ inputs.spec }}
           setup-terraform: true
-          terraform-version: 1.14.2
-          setup-aws: true
+          terraform-version: '1.14.2'
           setup-checkov: true
           checkov-version: '3.2.495'
-          aws-role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          setup-aws: true
+          aws-role-to-assume: ${{ vars.AWS_ROLE_ARN }} # TODO: Change to secrets.AWS_ROLE_ARN
           aws-region: ${{ vars.AWS_REGION }}
           # upload-plan-destination: 'aws'   # Since the plans bucket is S3
           # upload-plan-destination-s3-bucket: '{NAME_OF_YOUR_PLAN_BUCKET}'
@@ -81,4 +61,4 @@ jobs:
           GIT_CONFIG_KEY_0: "url.https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/.insteadOf"
           GIT_CONFIG_VALUE_0: "ssh://git@github.com/"
           # Optional if you're using Infracost integration
-          INFRACOST_API_KEY: ${{ secrets.INFRACOST_API_KEY }}
+          # INFRACOST_API_KEY: ${{ secrets.INFRACOST_API_KEY }}
