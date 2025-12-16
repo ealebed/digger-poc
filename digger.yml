@@ -1,6 +1,12 @@
-# By default, Digger does not run apply on merge. If you want to enable, uncomment the lines below and use 'apply-on-merge' workflow for projects.
+# By default, Digger does not run apply on merge.
+# If you want to enable, uncomment the lines below and use 'apply-on-merge' workflow for projects.
 # disable_digger_apply_comment: true
 # disable_digger_apply_status_check: true
+
+# Uncomment options below to automatically merge the PR when all checks pass (including successful apply)
+# auto_merge: true
+# auto_merge_strategy: "squash"
+# Also read more about apply requirements: https://docs.opentaco.dev/ce/howto/apply-requirements
 
 auto_merge: false
 pr_locks: true
@@ -10,9 +16,10 @@ generate_projects:
     - include: "teams/*/*/test/*/*"
       exclude: "**/.terraform/**"
       terraform: true
-      # workflow: "default"
+      workflow: "default"
       # workflow: "with-checkov"
-      workflow: "with-infracost"
+      # workflow: "with-infracost"
+      # workflow: "prod"
     # teams/{team}/aws/prod/{region}/{project}
     - include: "teams/*/*/prod/*/*"
       exclude: "**/.terraform/**"
@@ -23,12 +30,10 @@ workflows:
   default:
     plan:
       steps:
-        - run: echo "TEST - starting plan step"
         - init
         - plan
     apply:
       steps:
-        - run: echo "TEST - starting apply step"
         - init
         - apply
     workflow_configuration:
@@ -40,12 +45,20 @@ workflows:
   prod:
     plan:
       steps:
-        - run: echo "PROD - starting plan step"
         - init
         - plan
+        - run: checkov -d . --framework terraform
+        - run: infracost breakdown --path=. | tee -a $DIGGER_OUT
+        - run: |
+            set -euo pipefail
+            git fetch --no-tags origin "$DEFAULT_BRANCH"
+            git checkout -B digger-base "origin/$DEFAULT_BRANCH"
+            infracost breakdown --path . --format=json --out-file="$RUNNER_TEMP/infracost-base-${PROJECT_NAME}.json"
+            git fetch --no-tags origin "$PR_BRANCH"
+            git checkout -B digger-pr FETCH_HEAD
+        - run: infracost diff --path=. --compare-to="$RUNNER_TEMP/infracost-base-${PROJECT_NAME}.json" | tee -a $DIGGER_OUT
     apply:
       steps:
-        - run: echo "PROD - starting apply step"
         - init
         - apply
     workflow_configuration:
