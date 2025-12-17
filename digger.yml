@@ -29,10 +29,10 @@ generate_projects:
     - include: "infrastructure/*/*"
       exclude: "**/.terraform/**"
       terraform: true
-      workflow: "default"
+      # workflow: "default"
       # workflow: "with-checkov"
       # workflow: "with-infracost"
-      # workflow: "prod"
+      workflow: "prod"
 
 workflows:
   default:
