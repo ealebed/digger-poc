@@ -36,17 +36,6 @@ generate_projects:
 
 workflows:
   default:
-    env_vars:
-      state:
-        - name: TF_IN_AUTOMATION
-          value: "true"
-        - name: TF_INPUT
-          value: "false"
-      commands:
-        - name: TF_IN_AUTOMATION
-          value: "true"
-        - name: TF_INPUT
-          value: "false"
     plan:
       steps:
         - init
