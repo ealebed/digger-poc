@@ -78,6 +78,8 @@ jobs:
           # digger-filename: digger.services.yml
 
         env:
+          TF_IN_AUTOMATION: "true"
+          TF_INPUT: "false"
           GITHUB_CONTEXT: ${{ toJson(github) }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Optional if you're using remote modules from your own private repo

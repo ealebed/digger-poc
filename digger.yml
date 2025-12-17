@@ -51,17 +51,6 @@ workflows:
       skip_merge_check: true  # Let Dev Apply before the branch is mergable
 
   prod:
-    env_vars:
-      state:
-        - name: TF_IN_AUTOMATION
-          value: "true"
-        - name: TF_INPUT
-          value: "false"
-      commands:
-        - name: TF_IN_AUTOMATION
-          value: "true"
-        - name: TF_INPUT
-          value: "false"
     plan:
       steps:
         - init
@@ -86,17 +75,6 @@ workflows:
       on_commit_to_default: ["digger unlock"]
 
   with-checkov:
-    env_vars:
-      state:
-        - name: TF_IN_AUTOMATION
-          value: "true"
-        - name: TF_INPUT
-          value: "false"
-      commands:
-        - name: TF_IN_AUTOMATION
-          value: "true"
-        - name: TF_INPUT
-          value: "false"
     plan:
       steps:
         - init
@@ -112,17 +90,6 @@ workflows:
       on_commit_to_default: ["digger unlock"]
 
   with-infracost:
-    env_vars:
-      state:
-        - name: TF_IN_AUTOMATION
-          value: "true"
-        - name: TF_INPUT
-          value: "false"
-      commands:
-        - name: TF_IN_AUTOMATION
-          value: "true"
-        - name: TF_INPUT
-          value: "false"
     plan:
       steps:
         - init
@@ -146,25 +113,12 @@ workflows:
       on_commit_to_default: ["digger unlock"]
 
   apply-on-merge:
-    env_vars:
-      state:
-        - name: TF_IN_AUTOMATION
-          value: "true"
-        - name: TF_INPUT
-          value: "false"
-      commands:
-        - name: TF_IN_AUTOMATION
-          value: "true"
-        - name: TF_INPUT
-          value: "false"
     plan:
       steps:
-        - run: echo "TEST - starting plan step"
         - init
         - plan
     apply:
       steps:
-        - run: echo "TEST - starting apply step"
         - init
         - apply
     workflow_configuration:
