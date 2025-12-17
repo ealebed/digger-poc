@@ -73,8 +73,9 @@ jobs:
           upload-plan-destination: 'aws'
           upload-plan-destination-s3-bucket: ${{ vars.TF_PLAN_OUTPUTS_BUCKET }}
           reporting-strategy: multiple_comments
-          # digger-filename: digger.yml
-          digger-filename: digger.infra.yml
+          digger-filename: digger.yml
+          # digger-filename: digger.infra.yml
+          # digger-filename: digger.services.yml
 
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}

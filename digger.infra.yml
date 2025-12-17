@@ -13,7 +13,7 @@ pr_locks: true
 generate_projects:
   blocks:
     # infrastructure/{account_id}/{project}
-    - include: "infrastructure/**"
+    - include: "infrastructure/*/*"
       exclude: "**/.terraform/**"
       terraform: true
       workflow: "default"
