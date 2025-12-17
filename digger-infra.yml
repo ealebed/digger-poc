@@ -12,30 +12,28 @@ auto_merge: false
 pr_locks: true
 generate_projects:
   blocks:
-    # teams/{team}/aws/test/{region}/{project}
-    - include: "teams/*/*/test/*/*"
+    # infrastructure/{account_id}/{project}
+    - include: "infrastructure/*/*"
       exclude: "**/.terraform/**"
       terraform: true
       workflow: "default"
       # workflow: "with-checkov"
       # workflow: "with-infracost"
       # workflow: "prod"
-    # teams/{team}/aws/prod/{region}/{project}
-    - include: "teams/*/*/prod/*/*"
-      exclude: "**/.terraform/**"
-      terraform: true
-      workflow: "prod"
-    # infrastructure/{account_id}/{project}
-    - include: "infrastructure/*/*"
-      exclude: "**/.terraform/**"
-      terraform: true
-      # workflow: "default"
-      # workflow: "with-checkov"
-      # workflow: "with-infracost"
-      workflow: "prod"
 
 workflows:
   default:
+    env_vars:
+      state:
+        - name: TF_IN_AUTOMATION
+          value: "true"
+        - name: TF_INPUT
+          value: "false"
+      commands:
+        - name: TF_IN_AUTOMATION
+          value: "true"
+        - name: TF_INPUT
+          value: "false"
     plan:
       steps:
         - init
@@ -51,11 +49,22 @@ workflows:
       skip_merge_check: true  # Let Dev Apply before the branch is mergable
 
   prod:
+    env_vars:
+      state:
+        - name: TF_IN_AUTOMATION
+          value: "true"
+        - name: TF_INPUT
+          value: "false"
+      commands:
+        - name: TF_IN_AUTOMATION
+          value: "true"
+        - name: TF_INPUT
+          value: "false"
     plan:
       steps:
         - init
         - plan
-        # - run: checkov -d . --framework terraform
+        - run: checkov -d . --framework terraform
         - run: infracost breakdown --path=. | tee -a $DIGGER_OUT
         - run: |
             set -euo pipefail
@@ -75,6 +84,17 @@ workflows:
       on_commit_to_default: ["digger unlock"]
 
   with-checkov:
+    env_vars:
+      state:
+        - name: TF_IN_AUTOMATION
+          value: "true"
+        - name: TF_INPUT
+          value: "false"
+      commands:
+        - name: TF_IN_AUTOMATION
+          value: "true"
+        - name: TF_INPUT
+          value: "false"
     plan:
       steps:
         - init
@@ -90,6 +110,17 @@ workflows:
       on_commit_to_default: ["digger unlock"]
 
   with-infracost:
+    env_vars:
+      state:
+        - name: TF_IN_AUTOMATION
+          value: "true"
+        - name: TF_INPUT
+          value: "false"
+      commands:
+        - name: TF_IN_AUTOMATION
+          value: "true"
+        - name: TF_INPUT
+          value: "false"
     plan:
       steps:
         - init
@@ -113,6 +144,17 @@ workflows:
       on_commit_to_default: ["digger unlock"]
 
   apply-on-merge:
+    env_vars:
+      state:
+        - name: TF_IN_AUTOMATION
+          value: "true"
+        - name: TF_INPUT
+          value: "false"
+      commands:
+        - name: TF_IN_AUTOMATION
+          value: "true"
+        - name: TF_INPUT
+          value: "false"
     plan:
       steps:
         - init
