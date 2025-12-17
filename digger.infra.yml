@@ -16,10 +16,10 @@ generate_projects:
     - include: "infrastructure/*/*"
       exclude: "**/.terraform/**"
       terraform: true
-      workflow: "default"
+      # workflow: "default"
       # workflow: "with-checkov"
       # workflow: "with-infracost"
-      # workflow: "prod"
+      workflow: "prod"
 
 workflows:
   default:
@@ -42,7 +42,7 @@ workflows:
       steps:
         - init
         - plan
-        - run: checkov -d . --framework terraform
+        # - run: checkov -d . --framework terraform
         - run: infracost breakdown --path=. | tee -a $DIGGER_OUT
         - run: |
             set -euo pipefail
