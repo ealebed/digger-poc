@@ -10,38 +10,65 @@
 
 auto_merge: false
 pr_locks: true
-generate_projects:
-  blocks:
-    # infrastructure/{account_id}/{project}
-    - include: "infrastructure/*/*"
-      exclude: "**/.terraform/**"
-      terraform: true
-      workflow: "default"
-      # workflow: "with-checkov"
-      # workflow: "with-infracost"
-      # workflow: "prod"
+
+projects:
+  - name: services_platform_notification_dev_eu-west-1
+    dir: services/platform/notification
+    # apply_requirements: [approved, mergeable, undiverged]
+    # branch: main
+    # workspace: default
+    # terragrunt: false
+    workflow: dev-eu-west-1
+    # include_patterns: ["../modules/**"]
+    # exclude_patterns: []
+  - name: services_platform_notification_dev_us-east-1
+    dir: services/platform/notification
+    # branch: main
+    workflow: dev-us-east-1
+    # include_patterns: ["../modules/**"]
+    # exclude_patterns: []
 
 workflows:
-  default:
-    env_vars:
-      state:
-        - name: TF_IN_AUTOMATION
-          value: "true"
-        - name: TF_INPUT
-          value: "false"
-      commands:
-        - name: TF_IN_AUTOMATION
-          value: "true"
-        - name: TF_INPUT
-          value: "false"
+  dev-eu-west-1:
     plan:
       steps:
+        - run: |
+            sed -e "s/ENV_NAME/dev/" -e "s/ENV_REGION/eu-west-1/" < backend.tf.template > backend.tf
+            cat backend.tf
         - init
-        - plan
+        - plan:
+          extra_args: ["-input=false", "-var-file=dev.eu.tfvars"]
     apply:
       steps:
+        - run: |
+            sed -e "s/ENV_NAME/dev/" -e "s/ENV_REGION/eu-west-1/" < backend.tf.template > backend.tf
+            cat backend.tf
         - init
-        - apply
+        - apply:
+          extra_args: ["-auto-approve", "-var-file=dev.eu.tfvars"]
+    workflow_configuration:
+      on_pull_request_pushed: ["digger plan"]
+      on_pull_request_closed: ["digger unlock"]
+      on_commit_to_default: ["digger unlock"]
+      skip_merge_check: true  # Let Dev Apply before the branch is mergable
+
+  dev-us-east-1:
+    plan:
+      steps:
+        - run: |
+            sed -e "s/ENV_NAME/dev/" -e "s/ENV_REGION/us-east-1/" < backend.tf.template > backend.tf
+            cat backend.tf
+        - init
+        - plan:
+          extra_args: ["-input=false", "-var-file=dev.us.tfvars"]
+    apply:
+      steps:
+        - run: |
+            sed -e "s/ENV_NAME/dev/" -e "s/ENV_REGION/us-east-1/" < backend.tf.template > backend.tf
+            cat backend.tf
+        - init
+        - apply:
+          extra_args: ["-auto-approve", "-var-file=dev.us.tfvars"]
     workflow_configuration:
       on_pull_request_pushed: ["digger plan"]
       on_pull_request_closed: ["digger unlock"]
@@ -49,17 +76,6 @@ workflows:
       skip_merge_check: true  # Let Dev Apply before the branch is mergable
 
   prod:
-    env_vars:
-      state:
-        - name: TF_IN_AUTOMATION
-          value: "true"
-        - name: TF_INPUT
-          value: "false"
-      commands:
-        - name: TF_IN_AUTOMATION
-          value: "true"
-        - name: TF_INPUT
-          value: "false"
     plan:
       steps:
         - init
@@ -84,17 +100,6 @@ workflows:
       on_commit_to_default: ["digger unlock"]
 
   with-checkov:
-    env_vars:
-      state:
-        - name: TF_IN_AUTOMATION
-          value: "true"
-        - name: TF_INPUT
-          value: "false"
-      commands:
-        - name: TF_IN_AUTOMATION
-          value: "true"
-        - name: TF_INPUT
-          value: "false"
     plan:
       steps:
         - init
@@ -110,17 +115,6 @@ workflows:
       on_commit_to_default: ["digger unlock"]
 
   with-infracost:
-    env_vars:
-      state:
-        - name: TF_IN_AUTOMATION
-          value: "true"
-        - name: TF_INPUT
-          value: "false"
-      commands:
-        - name: TF_IN_AUTOMATION
-          value: "true"
-        - name: TF_INPUT
-          value: "false"
     plan:
       steps:
         - init
@@ -144,17 +138,6 @@ workflows:
       on_commit_to_default: ["digger unlock"]
 
   apply-on-merge:
-    env_vars:
-      state:
-        - name: TF_IN_AUTOMATION
-          value: "true"
-        - name: TF_INPUT
-          value: "false"
-      commands:
-        - name: TF_IN_AUTOMATION
-          value: "true"
-        - name: TF_INPUT
-          value: "false"
     plan:
       steps:
         - init
