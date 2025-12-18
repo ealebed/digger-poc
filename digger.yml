@@ -13,31 +13,39 @@ pr_locks: true
 projects:
   - name: services_platform_notification_dev_eu-west-1
     dir: services/platform/notification
-    # apply_requirements: [approved, mergeable, undiverged]
+    # apply_requirements: [approved, mergeable, undiverged] # TODO: test/verify
     workflow: dev-eu-west-1
+    # aws_role_to_assume: "arn:aws:iam::123456789012:role/DiggerDevRole" # TODO: test/verify
   - name: services_platform_notification_qa_eu-west-1
     dir: services/platform/notification
     workflow: qa-eu-west-1
+    # aws_role_to_assume: "arn:aws:iam::123456789098:role/DiggerQaRole"
   - name: services_platform_notification_prod_eu-west-1
     dir: services/platform/notification
     workflow: prod-eu-west-1
+    # aws_role_to_assume: "arn:aws:iam::531438381462:role/DiggerProdRole"
   - name: services_platform_notification_prod_us-east-1
     dir: services/platform/notification
     workflow: prod-us-east-1
+    # aws_role_to_assume: "arn:aws:iam::531438381462:role/DiggerProdRole"
 
   - name: services_platform_security_dev_eu-west-1
     dir: services/platform/security
     workflow: dev-eu-west-1
+    # aws_role_to_assume: "arn:aws:iam::123456789012:role/DiggerDevRole"
   - name: services_platform_security_prod_eu-west-1
     dir: services/platform/security
     workflow: prod-eu-west-1
+    # aws_role_to_assume: "arn:aws:iam::531438381462:role/DiggerProdRole"
 
   - name: services_schedule_absence_dev_eu-west-1
     dir: services/schedule/absence
     workflow: dev-eu-west-1
+    # aws_role_to_assume: "arn:aws:iam::123456789012:role/DiggerDevRole"
   - name: services_schedule_absence_qa_eu-west-1
     dir: services/schedule/absence
     workflow: qa-eu-west-1
+    # aws_role_to_assume: "arn:aws:iam::123456789098:role/DiggerQaRole"
 
 
 generate_projects:
