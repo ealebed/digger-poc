@@ -16,9 +16,9 @@ projects:
     dir: services/platform/notification
     # apply_requirements: [approved, mergeable, undiverged]
     workflow: dev-eu-west-1
-  - name: services_platform_notification_qa_us-east-1
+  - name: services_platform_notification_qa_eu-west-1
     dir: services/platform/notification
-    workflow: qa-us-east-1
+    workflow: qa-eu-west-1
   - name: services_platform_notification_prod_eu-west-1
     dir: services/platform/notification
     workflow: prod-eu-west-1
