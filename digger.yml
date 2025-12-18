@@ -10,6 +10,15 @@
 
 auto_merge: false
 pr_locks: true
+projects:
+  - name: services_platform_notification_dev_eu-west-1
+    dir: services/platform/notification
+    # apply_requirements: [approved, mergeable, undiverged]
+    workflow: dev-eu-west-1
+  - name: services_platform_notification_dev_us-east-1
+    dir: services/platform/notification
+    workflow: dev-us-east-1
+
 generate_projects:
   blocks:
     # teams/{team}/aws/test/{region}/{project}
@@ -35,6 +44,52 @@ generate_projects:
       workflow: "prod"
 
 workflows:
+  dev-eu-west-1:
+    plan:
+      steps:
+        - run: |
+            sed -e "s/ENV_NAME/dev/" -e "s/ENV_REGION/eu-west-1/" < backend.tf.template > backend.tf
+            cat backend.tf
+        - init
+        - plan:
+          extra_args: ["-input=false", "-var-file=dev.eu.tfvars"]
+    apply:
+      steps:
+        - run: |
+            sed -e "s/ENV_NAME/dev/" -e "s/ENV_REGION/eu-west-1/" < backend.tf.template > backend.tf
+            cat backend.tf
+        - init
+        - apply:
+          extra_args: ["-auto-approve", "-var-file=dev.eu.tfvars"]
+    workflow_configuration:
+      on_pull_request_pushed: ["digger plan"]
+      on_pull_request_closed: ["digger unlock"]
+      on_commit_to_default: ["digger unlock"]
+      skip_merge_check: true  # Let Dev Apply before the branch is mergable
+
+  dev-us-east-1:
+    plan:
+      steps:
+        - run: |
+            sed -e "s/ENV_NAME/dev/" -e "s/ENV_REGION/us-east-1/" < backend.tf.template > backend.tf
+            cat backend.tf
+        - init
+        - plan:
+          extra_args: ["-input=false", "-var-file=dev.us.tfvars"]
+    apply:
+      steps:
+        - run: |
+            sed -e "s/ENV_NAME/dev/" -e "s/ENV_REGION/us-east-1/" < backend.tf.template > backend.tf
+            cat backend.tf
+        - init
+        - apply:
+          extra_args: ["-auto-approve", "-var-file=dev.us.tfvars"]
+    workflow_configuration:
+      on_pull_request_pushed: ["digger plan"]
+      on_pull_request_closed: ["digger unlock"]
+      on_commit_to_default: ["digger unlock"]
+      skip_merge_check: true  # Let Dev Apply before the branch is mergable
+
   default:
     plan:
       steps:
