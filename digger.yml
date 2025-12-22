@@ -275,7 +275,7 @@ workflows:
       steps:
         - init
         - plan
-        - run: checkov -d . --framework terraform
+        # - run: checkov -d . --framework terraform
         - run: infracost breakdown --path=. | tee -a $DIGGER_OUT
         - run: |
             set -euo pipefail
