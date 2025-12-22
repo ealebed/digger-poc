@@ -4,37 +4,42 @@
 # disable_digger_apply_status_check: true
 
 # Uncomment options below to automatically merge the PR when all checks pass (including successful apply)
-# auto_merge: true
-# auto_merge_strategy: "squash"
+auto_merge: true
+auto_merge_strategy: "squash"
 # Also read more about apply requirements: https://docs.opentaco.dev/ce/howto/apply-requirements
 
-auto_merge: false
+# auto_merge: false
 pr_locks: true
 projects:
   - name: services_platform_notification_dev_eu-west-1
     dir: services/platform/notification
-    # apply_requirements: [approved, mergeable, undiverged] # TODO: test/verify
+    apply_requirements: [approved, mergeable, undiverged]
     workflow: dev-eu-west-1
     # aws_role_to_assume: "arn:aws:iam::123456789012:role/DiggerDevRole" # TODO: test/verify
   - name: services_platform_notification_qa_eu-west-1
     dir: services/platform/notification
+    apply_requirements: [approved, mergeable, undiverged]
     workflow: qa-eu-west-1
     # aws_role_to_assume: "arn:aws:iam::123456789098:role/DiggerQaRole"
   - name: services_platform_notification_prod_eu-west-1
     dir: services/platform/notification
+    apply_requirements: [approved, mergeable, undiverged]
     workflow: prod-eu-west-1
     # aws_role_to_assume: "arn:aws:iam::531438381462:role/DiggerProdRole"
   - name: services_platform_notification_prod_us-east-1
     dir: services/platform/notification
+    apply_requirements: [approved, mergeable, undiverged]
     workflow: prod-us-east-1
     # aws_role_to_assume: "arn:aws:iam::531438381462:role/DiggerProdRole"
 
   - name: services_platform_security_dev_eu-west-1
     dir: services/platform/security
+    apply_requirements: [approved, mergeable]
     workflow: dev-eu-west-1
     # aws_role_to_assume: "arn:aws:iam::123456789012:role/DiggerDevRole"
   - name: services_platform_security_prod_eu-west-1
     dir: services/platform/security
+    apply_requirements: [approved, mergeable]
     workflow: prod-eu-west-1
     # aws_role_to_assume: "arn:aws:iam::531438381462:role/DiggerProdRole"
 
