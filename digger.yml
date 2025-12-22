@@ -15,22 +15,30 @@ projects:
     dir: services/platform/notification
     apply_requirements: [approved, mergeable, undiverged]
     workflow: dev-eu-west-1
-    aws_role_to_assume: "arn:aws:iam::531438381462:role/digger-notification-role"
+    aws_role_to_assume:
+      state: "arn:aws:iam::531438381462:role/digger-notification-role"
+      command: "arn:aws:iam::531438381462:role/digger-notification-role"
   - name: services_platform_notification_qa_eu-west-1
     dir: services/platform/notification
     apply_requirements: [approved, mergeable, undiverged]
     workflow: qa-eu-west-1
-    aws_role_to_assume: "arn:aws:iam::531438381462:role/digger-notification-role"
+    aws_role_to_assume:
+      state: "arn:aws:iam::531438381462:role/digger-notification-role"
+      command: "arn:aws:iam::531438381462:role/digger-notification-role"
   - name: services_platform_notification_prod_eu-west-1
     dir: services/platform/notification
     apply_requirements: [approved, mergeable, undiverged]
     workflow: prod-eu-west-1
-    aws_role_to_assume: "arn:aws:iam::531438381462:role/digger-notification-role"
+    aws_role_to_assume:
+      state: "arn:aws:iam::531438381462:role/digger-notification-role"
+      command: "arn:aws:iam::531438381462:role/digger-notification-role"
   - name: services_platform_notification_prod_us-east-1
     dir: services/platform/notification
     apply_requirements: [approved, mergeable, undiverged]
     workflow: prod-us-east-1
-    aws_role_to_assume: "arn:aws:iam::531438381462:role/digger-notification-role"
+    aws_role_to_assume:
+      state: "arn:aws:iam::531438381462:role/digger-notification-role"
+      command: "arn:aws:iam::531438381462:role/digger-notification-role"
 
   - name: services_platform_security_dev_eu-west-1
     dir: services/platform/security
@@ -71,7 +79,9 @@ generate_projects:
     # infrastructure/{account_id}/{project}
     - include: "infrastructure/*/*"
       exclude: "**/.terraform/**"
-      aws_role_to_assume: "arn:aws:iam::531438381462:role/digger-infra-role"
+      aws_role_to_assume:
+        state: "arn:aws:iam::531438381462:role/digger-infra-role"
+        command: "arn:aws:iam::531438381462:role/digger-infra-role"
       terraform: true
       # workflow: "default"
       # workflow: "with-checkov"
