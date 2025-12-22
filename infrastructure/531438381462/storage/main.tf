@@ -14,6 +14,5 @@ module "s3_bucket_us" {
   source = "git::https://github.com/ealebed/terraform-modules.git?ref=s3-bucket/v1.0.1"
 
   environment  = "another-${var.aws_account_id}-us"
-  environment  = "${var.environment}-${var.aws_account_id}"
   project_name = var.project_name
 }
