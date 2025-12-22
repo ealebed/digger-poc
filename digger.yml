@@ -3,17 +3,15 @@
 # disable_digger_apply_comment: true
 # disable_digger_apply_status_check: true
 
-# Uncomment options below to automatically merge the PR when all checks pass (including successful apply)
+# Options below for automatically merge the PR when all checks pass (including successful apply)
 auto_merge: true
 auto_merge_strategy: "squash"
-# Also read more about apply requirements: https://docs.opentaco.dev/ce/howto/apply-requirements
 
-# auto_merge: false
 pr_locks: true
 projects:
   - name: services_platform_notification_dev_eu-west-1
     dir: services/platform/notification
-    apply_requirements: [approved, mergeable, undiverged]
+    apply_requirements: [approved, mergeable, undiverged] # https://docs.opentaco.dev/ce/howto/apply-requirements
     workflow: dev-eu-west-1
     aws_role_to_assume:
       state: "arn:aws:iam::531438381462:role/github-oidc-terraform" # ARN of the role to assume for state backend
@@ -44,7 +42,8 @@ projects:
     dir: services/platform/security
     apply_requirements: [approved, mergeable]
     workflow: dev-eu-west-1
-    # aws_role_to_assume: # !!!!!!!!! ARN is not set, so Digger will use default role mentioned in "diggerhq/digger@vLatest" action !!!!!!!!!
+    # !!!!!!!!! ARN is not set, so Digger will use default role mentioned in "diggerhq/digger@vLatest" action !!!!!!!!!
+    # aws_role_to_assume:
     #   state: "arn:aws:iam::531438381462:role/github-oidc-terraform"
     #   command: "arn:aws:iam::531438381462:role/digger-notification-role"
   - name: services_platform_security_prod_eu-west-1
@@ -68,22 +67,8 @@ projects:
     #   state: "arn:aws:iam::531438381462:role/github-oidc-terraform"
     #   command: "arn:aws:iam::531438381462:role/digger-notification-role"
 
-
 generate_projects:
   blocks:
-    # teams/{team}/aws/test/{region}/{project}
-    - include: "teams/*/*/test/*/*"
-      exclude: "**/.terraform/**"
-      terraform: true
-      workflow: "default"
-      # workflow: "with-checkov"
-      # workflow: "with-infracost"
-      # workflow: "prod"
-    # teams/{team}/aws/prod/{region}/{project}
-    - include: "teams/*/*/prod/*/*"
-      exclude: "**/.terraform/**"
-      terraform: true
-      workflow: "prod"
     # infrastructure/{account_id}/{project}
     - include: "infrastructure/*/*"
       exclude: "**/.terraform/**"
