@@ -16,49 +16,57 @@ projects:
     apply_requirements: [approved, mergeable, undiverged]
     workflow: dev-eu-west-1
     aws_role_to_assume:
-      state: "arn:aws:iam::531438381462:role/digger-notification-role"
-      command: "arn:aws:iam::531438381462:role/digger-notification-role"
+      state: "arn:aws:iam::531438381462:role/github-oidc-terraform" # ARN of the role to assume for state backend
+      command: "arn:aws:iam::531438381462:role/digger-notification-role" # ARN of the role to assume for commands e.g. plan / apply
   - name: services_platform_notification_qa_eu-west-1
     dir: services/platform/notification
     apply_requirements: [approved, mergeable, undiverged]
     workflow: qa-eu-west-1
     aws_role_to_assume:
-      state: "arn:aws:iam::531438381462:role/digger-notification-role"
+      state: "arn:aws:iam::531438381462:role/github-oidc-terraform"
       command: "arn:aws:iam::531438381462:role/digger-notification-role"
   - name: services_platform_notification_prod_eu-west-1
     dir: services/platform/notification
     apply_requirements: [approved, mergeable, undiverged]
     workflow: prod-eu-west-1
     aws_role_to_assume:
-      state: "arn:aws:iam::531438381462:role/digger-notification-role"
+      state: "arn:aws:iam::531438381462:role/github-oidc-terraform"
       command: "arn:aws:iam::531438381462:role/digger-notification-role"
   - name: services_platform_notification_prod_us-east-1
     dir: services/platform/notification
     apply_requirements: [approved, mergeable, undiverged]
     workflow: prod-us-east-1
     aws_role_to_assume:
-      state: "arn:aws:iam::531438381462:role/digger-notification-role"
+      state: "arn:aws:iam::531438381462:role/github-oidc-terraform"
       command: "arn:aws:iam::531438381462:role/digger-notification-role"
 
   - name: services_platform_security_dev_eu-west-1
     dir: services/platform/security
     apply_requirements: [approved, mergeable]
     workflow: dev-eu-west-1
-    # aws_role_to_assume: "arn:aws:iam::123456789012:role/DiggerDevRole"
+    # aws_role_to_assume: # !!!!!!!!! ARN is not set, so Digger will use default role mentioned in "diggerhq/digger@vLatest" action !!!!!!!!!
+    #   state: "arn:aws:iam::531438381462:role/github-oidc-terraform"
+    #   command: "arn:aws:iam::531438381462:role/digger-notification-role"
   - name: services_platform_security_prod_eu-west-1
     dir: services/platform/security
     apply_requirements: [approved, mergeable]
     workflow: prod-eu-west-1
-    # aws_role_to_assume: "arn:aws:iam::531438381462:role/DiggerProdRole"
+    # aws_role_to_assume:
+    #   state: "arn:aws:iam::531438381462:role/github-oidc-terraform"
+    #   command: "arn:aws:iam::531438381462:role/digger-notification-role"
 
   - name: services_schedule_absence_dev_eu-west-1
     dir: services/schedule/absence
     workflow: dev-eu-west-1
-    # aws_role_to_assume: "arn:aws:iam::123456789012:role/DiggerDevRole"
+    # aws_role_to_assume:
+    #   state: "arn:aws:iam::531438381462:role/github-oidc-terraform"
+    #   command: "arn:aws:iam::531438381462:role/digger-notification-role"
   - name: services_schedule_absence_qa_eu-west-1
     dir: services/schedule/absence
     workflow: qa-eu-west-1
-    # aws_role_to_assume: "arn:aws:iam::123456789098:role/DiggerQaRole"
+    # aws_role_to_assume:
+    #   state: "arn:aws:iam::531438381462:role/github-oidc-terraform"
+    #   command: "arn:aws:iam::531438381462:role/digger-notification-role"
 
 
 generate_projects:
@@ -80,7 +88,7 @@ generate_projects:
     - include: "infrastructure/*/*"
       exclude: "**/.terraform/**"
       aws_role_to_assume:
-        state: "arn:aws:iam::531438381462:role/digger-infra-role"
+        state: "arn:aws:iam::531438381462:role/github-oidc-terraform"
         command: "arn:aws:iam::531438381462:role/digger-infra-role"
       terraform: true
       # workflow: "default"
