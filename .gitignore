@@ -31,3 +31,4 @@ terraform.rc
 
 *.pem
 *.key
+opentaco_token
