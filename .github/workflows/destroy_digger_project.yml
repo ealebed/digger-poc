@@ -24,8 +24,9 @@ jobs:
           digger-spec: ${{ inputs.spec }}
           command: "digger destroy"
           project: "${{ inputs.project }}"
+          digger-token: ${{ vars.DIGGER_TOKEN }}
           setup-aws: true
-          aws-role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-role-to-assume: ${{ vars.AWS_ROLE_ARN }} # TODO: Change to secrets.AWS_ROLE_ARN
           aws-region: ${{ vars.AWS_REGION }}
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
