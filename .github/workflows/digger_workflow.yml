@@ -68,8 +68,8 @@ jobs:
           setup-checkov: true
           checkov-version: '3.2.495'
           setup-aws: true
-          # aws-role-to-assume: ${{ vars.AWS_ROLE_ARN }} # TODO: Change to secrets.AWS_ROLE_ARN
-          # aws-region: ${{ vars.AWS_REGION }}
+          aws-role-to-assume: ${{ vars.AWS_ROLE_ARN }} # TODO: Change to secrets.AWS_ROLE_ARN
+          aws-region: ${{ vars.AWS_REGION }}
           upload-plan-destination: 'aws'
           upload-plan-destination-s3-bucket: ${{ vars.TF_PLAN_OUTPUTS_BUCKET }}
           reporting-strategy: multiple_comments
